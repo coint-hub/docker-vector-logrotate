@@ -4,4 +4,4 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./logs:/var/log/vector
+      - ../docker-logs:/var/log/vector
