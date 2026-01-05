@@ -8,4 +8,4 @@ COPY start.sh /start.sh
 
 ENV VECTOR_CONFIG=/etc/vector/vector.yaml
 
-ENTRYPOINT exec "/start.sh"
+ENTRYPOINT ["/start.sh"]
