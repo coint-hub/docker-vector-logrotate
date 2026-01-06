@@ -1,11 +1,8 @@
 FROM timberio/vector:0.43.1-alpine
 
-RUN apk add --no-cache logrotate
+ENV TZ=Asia/Seoul
+RUN apk --no-cache add zstd
 
-COPY logrotate.conf /etc/logrotate.d/vector
-COPY vector.yaml /etc/vector/vector.yaml
-COPY start.sh /start.sh
+COPY vector.yaml /vector.yaml
 
-ENV VECTOR_CONFIG=/etc/vector/vector.yaml
-
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT exec vector --config /vector.yaml --require-healthy true

@@ -1,3 +1,5 @@
+timezone: Asia/Seoul
+
 sources:
   docker_logs:
     type: docker_logs
@@ -7,6 +9,7 @@ sinks:
     type: file
     inputs:
       - docker_logs
-    path: /var/log/vector/{{ container_name }}/current.log
     encoding:
-      codec: json
+      codec: text
+    compression: zstd
+    path: /logs/{{ container_name }}/%Y-%m-%d.log.zst

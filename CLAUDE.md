@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Docker image combining Vector (log aggregation) and logrotate for automatic container log collection. Collects logs from all Docker containers via Docker socket, writes JSON-formatted logs per container, and rotates them daily with compression.
+Docker image using Vector for automatic container log collection. Collects logs from all Docker containers via Docker socket, writes compressed logs per container organized by date.
 
 ## Build and Run
 
@@ -22,17 +22,14 @@ docker compose logs -f vector
 ## Architecture
 
 - **Base image**: `timberio/vector:0.43.1-alpine`
-- **Entrypoint** (`start.sh`): Sets up cron job for daily log rotation at 3 AM, then starts Vector
-- **Vector config** (`vector.yaml`): Collects Docker container logs and writes to `/var/log/vector/{container_name}/current.log` as JSON
-- **Logrotate config** (`logrotate.conf`): Daily rotation with compression, keeps 2 rotations (configurable via `rotate` directive)
+- **Vector config** (`vector.yaml`): Collects Docker container logs and writes to `/logs/{container_name}/{date}.log.zst` with zstd compression
+- **Log output**: Compressed text format, organized by container name and date
 
 ## Key Files
 
-- `Dockerfile` - Alpine-based image with Vector + logrotate
-- `vector.yaml` - Vector pipeline configuration (sources → sinks)
-- `logrotate.conf` - Log rotation rules
-- `start.sh` - Entrypoint that initializes cron and starts Vector
-- `docker-compose.yml` - Service definition with Docker socket mount and log volume
+- `Dockerfile` - Alpine-based Vector image with zstd support
+- `vector.yaml` - Vector pipeline configuration (docker_logs source → file sink)
+- `docker-compose.yml` - Service definition with Docker socket mount and log volume at `../docker-logs`
 
 ## Git Commit Command ('gc')
 
@@ -77,7 +74,7 @@ Do NOT list file-by-file changes - git diff shows that. Simple changes like form
 Simple changes (no body needed):
 - `docs: update README with usage instructions`
 - `chore: upgrade vector base image version`
-- `fix: correct logrotate schedule syntax`
+- `fix: correct vector config syntax`
 
 Complex changes (concise body explaining why and how):
 ```
