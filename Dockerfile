@@ -1,4 +1,4 @@
-FROM timberio/vector:0.43.1-alpine
+FROM timberio/vector:0.52.0-alpine
 
 ENV TZ=Asia/Seoul
 RUN apk --no-cache add zstd
